@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA 6 Countdown</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1416;--ink:#f4efe2;--hot:#ffd21f;--alt:#ff5a1f;--mute:#7f9396;--card:#f4efe2}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Space Mono",monospace;min-height:100vh;overflow-x:hidden;
+ background-image:radial-gradient(circle at 20% -10%,#17383c 0,transparent 55%),radial-gradient(circle at 90% 110%,#3a1d0c 0,transparent 50%),
+ radial-gradient(#ffffff0a 1px,transparent 1.4px);background-size:auto,auto,7px 7px}
+main{max-width:1100px;margin:0 auto;padding:clamp(20px,5vw,56px) clamp(16px,4vw,40px) 80px}
+.tag{display:inline-block;background:var(--hot);color:#111;font-weight:700;font-size:12px;letter-spacing:.18em;padding:6px 10px;transform:rotate(-2deg)}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;line-height:.88;font-size:clamp(64px,17vw,190px);margin:18px 0 6px;letter-spacing:.01em}
+h1 span{color:var(--hot);-webkit-text-stroke:0;text-shadow:6px 6px 0 var(--alt)}
+.sub{color:var(--mute);font-size:clamp(13px,1.8vw,16px);max-width:52ch}
+.clock{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,2vw,20px);margin:clamp(28px,5vw,48px) 0 14px}
+.unit{background:#101d20;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--alt);padding:clamp(10px,2.5vw,24px) 8px;text-align:center}
+.num{font-family:Anton,Impact,sans-serif;font-size:clamp(56px,16vw,170px);line-height:1;font-variant-numeric:tabular-nums;color:var(--hot)}
+.lab{font-size:clamp(10px,1.5vw,14px);letter-spacing:.3em;color:var(--mute);margin-top:6px}
+.bar{height:10px;border:2px solid var(--ink);margin-top:26px}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--hot) 0 10px,#111 10px 20px);width:0}
+.status{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.status b{color:var(--ink)}
+h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(30px,6vw,56px);margin:clamp(48px,8vw,90px) 0 6px}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:26px 22px;margin-top:26px}
+.file{background:var(--card);color:#111;padding:10px 10px 12px;box-shadow:6px 8px 0 #000;transition:transform .2s;position:relative}
+.file:nth-child(odd){transform:rotate(-2.2deg)}.file:nth-child(even){transform:rotate(1.8deg)}
+.file:nth-child(3n){transform:rotate(3deg)}
+.file:hover{transform:rotate(0) scale(1.05);z-index:2}
+.file img{display:block;width:100%;aspect-ratio:1/1.1;object-fit:cover;border:2px solid #111}
+.file .no{position:absolute;top:-10px;left:-8px;background:var(--alt);color:#fff;font-weight:700;font-size:11px;padding:3px 7px}
+.file p{font-weight:700;font-size:13px;margin-top:9px;text-transform:uppercase}
+.file small{font-size:11px;color:#555}
+.done .num{color:var(--alt)}
+#go{display:none;font-family:Anton,Impact,sans-serif;text-transform:uppercase;font-size:clamp(44px,12vw,150px);line-height:.95;color:var(--hot);text-shadow:6px 6px 0 var(--alt);margin:30px 0;animation:pop .6s infinite alternate}
+.done #go{display:block}.done .clock{display:none}
+@keyframes pop{to{transform:scale(1.03) rotate(-1deg)}}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:9}
+@media (prefers-reduced-motion:reduce){#go{animation:none}.file{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<main id="m">
+  <div class="tag">HEUTE NACHT · 00:00 UHR</div>
+  <h1>GTA <span>6</span><br>Countdown</h1>
+  <p class="sub">Die letzten Stunden normales Leben. Ab Mitternacht ist einer von uns nicht mehr erreichbar.</p>
+
+  <div class="clock">
+    <div class="unit"><div class="num" id="h">00</div><div class="lab">STUNDEN</div></div>
+    <div class="unit"><div class="num" id="mi">00</div><div class="lab">MINUTEN</div></div>
+    <div class="unit"><div class="num" id="s">00</div><div class="lab">SEKUNDEN</div></div>
+  </div>
+  <div id="go">Es ist soweit!<br>Handy aus.</div>
+
+  <div class="bar"><i id="bar"></i></div>
+  <div class="status"><span>Wartezeit heute: <b id="pct">0 %</b> geschafft</span><span>Status: <b id="st">Snacks bereitlegen</b></span></div>
+
+  <h2>Akte: Der Spieler</h2>
+  <p class="sub">Zuletzt gesehen vor dem Release. Danach liegen keine Sichtungen mehr vor.</p>
+  <div class="files">
+    <div class="file"><span class="no">01</span><img src="img/t2.jpg" alt="Porträt im Anzug, Comic-Stil"><p>Der Boss</p><small>Offizielles Fahndungsfoto</small></div>
+    <div class="file"><span class="no">02</span><img src="img/t1.jpg" alt="Mit Weihnachts-Elch im Flur, Comic-Stil"><p>Komplize gesichert</p><small>Der Elch schweigt</small></div>
+    <div class="file"><span class="no">03</span><img src="img/t3.jpg" alt="Am Strand im Hawaiihemd, Comic-Stil"><p>Undercover am Strand</p><small>Tarnung: Hawaiihemd</small></div>
+    <div class="file"><span class="no">04</span><img src="img/t4.jpg" alt="Selfie im Auto, Comic-Stil"><p>Fluchtfahrer</p><small>Skeptisch, aber angeschnallt</small></div>
+    <div class="file"><span class="no">05</span><img src="img/t5.jpg" alt="Vor dem Eiffelturm, Comic-Stil"><p>Auslandseinsatz</p><small>Mission: Paris</small></div>
+    <div class="file"><span class="no">06</span><img src="img/t7.jpg" alt="An der Küste, Comic-Stil"><p>Offiziell »krank«</p><small>Ab morgen, 0:01 Uhr</small></div>
+    <div class="file"><span class="no">07</span><img src="img/t6.jpg" alt="Schlafend im Auto, Comic-Stil"><p>Nach 14 Std. Zocken</p><small>Prognose für Freitag</small></div>
+  </div>
+</main>
+<script>
+const target=new Date(2026,10,19,0,0,0).getTime(), dayStart=new Date(2026,10,18,0,0,0).getTime();
+const $=id=>document.getElementById(id), p=n=>String(n).padStart(2,'0');
+const msgs=[[3*3600,'Snacks bereitlegen'],[3600,'Controller laden'],[600,'Allen absagen'],[60,'Hinsetzen!'],[0,'Nicht blinzeln']];
+let fired=false;
+function tick(){
+  const left=Math.max(0,target-Date.now()), t=Math.floor(left/1000);
+  $('h').textContent=p(Math.floor(t/3600)); $('mi').textContent=p(Math.floor(t%3600/60)); $('s').textContent=p(t%60);
+  const pc=Math.min(100,Math.max(0,(Date.now()-dayStart)/(target-dayStart)*100));
+  $('bar').style.width=pc+'%'; $('pct').textContent=pc.toFixed(1).replace('.',',')+' %';
+  $('st').textContent=left?msgs.find(m=>t>=m[0])[1]:'Im Spiel. Bitte nicht stören.';
+  if(!left&&!fired){fired=true;$('m').classList.add('done');confetti();}
+}
+tick(); setInterval(tick,250);
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const c=$('fx'),x=c.getContext('2d');let W,H;const fit=()=>{W=c.width=innerWidth;H=c.height=innerHeight};fit();addEventListener('resize',fit);
+  const col=['#ffd21f','#ff5a1f','#f4efe2','#2fd3c0'];
+  const ps=Array.from({length:160},()=>({x:Math.random()*W,y:-Math.random()*H,v:2+Math.random()*4,w:6+Math.random()*8,r:Math.random()*6,c:col[Math.random()*4|0]}));
+  (function f(){x.clearRect(0,0,W,H);for(const q of ps){q.y+=q.v;q.r+=.08;q.x+=Math.sin(q.r);if(q.y>H){q.y=-10;q.x=Math.random()*W}
+    x.save();x.translate(q.x,q.y);x.rotate(q.r);x.fillStyle=q.c;x.fillRect(-q.w/2,-q.w/4,q.w,q.w/2);x.restore()}requestAnimationFrame(f)})();
+}
+</script>
+</body>
+</html>
